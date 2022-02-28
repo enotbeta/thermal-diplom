@@ -13,16 +13,18 @@ class Event:
         self.avg = self.df["temperatureAvg"].mean()
         self.std = self.df.std(ddof=0)["temperatureAvg"]
         self.df = self.df.loc[(self.avg - sigma * self.std < self.df['temperatureAvg']) \
-                              & (self.df['temperatureAvg'] < self.avg + sigma * self.std)]
+                              & (self.df['temperatureAvg'] < self.avg + sigma * self.std) & self.df['temperatureAvg'] != 0]
+        self.avg = self.df["temperatureAvg"].mean()
+        self.std = self.df.std(ddof=0)["temperatureAvg"]
 
 
 class Model:
-    def __init__(self, dataframe_input):
+    def __init__(self, dataframe_input, number_of_rows = 10):
         self.df_all = None
         self.df_stat = None
         self.df = dataframe_input
         self.events = []
-        self.load()
+        self.load(number_of_rows = number_of_rows)
 
 
 
@@ -40,8 +42,8 @@ class Model:
 
     def concat_all(self):
         self.df_all = self.events[0].df
-        for i in range(1, len(self.events)):
-            self.df_all = pd.concat([self.df_all, self.events[i].df])
+        for item in range(1, len(self.events)):
+            self.df_all = pd.concat([self.df_all, self.events[item].df])
 
     def concat_stat(self):
         var_mean = []
@@ -53,12 +55,15 @@ class Model:
             var_id.append(item.id)
         self.df_stat = pd.DataFrame({'id': var_id, 'temperatureAvg': var_mean, 'temperatureSdv': var_std})
 
-    def load(self, dataframe = None):
+    def load(self, dataframe = None, number_of_rows = 10):
         if dataframe is not None:
             self.df = dataframe
         self.events = []
         for id_name in self.df["id"].unique():
-            self.events.append(Event(id_name, self.df))
+            if len(self.df.loc[self.df["id"] == id_name]) > number_of_rows:
+                self.events.append(Event(id_name, self.df))
+                #print(len(self.df.loc[self.df["id"] == id_name]), id_name)
+
         self.concat()
 
 
@@ -84,6 +89,5 @@ class Import:
         df = pd.DataFrame({"id": id, "dist": dist, "t": t, "ts": ts, "x": x, "y": y, "w": w, "h": h, \
                            "strange_thing": strange_thing, "x_ir": x_ir, "y_ir": y_ir, "w_ir": w_ir, "h_ir": h_ir})
 
-# %%
-
-# %%
+#model.df_stat[['id','temperatureAvg']].plot(x = 'id', y = 'temperatureAvg', kind = 'scatter')
+#model.df_all[['id','temperatureAvg']].plot(x = 'id', y = 'temperatureAvg', kind = 'scatter')
