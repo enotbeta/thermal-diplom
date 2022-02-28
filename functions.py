@@ -12,8 +12,9 @@ class Event:
     def filter(self, sigma=2):
         self.avg = self.df["temperatureAvg"].mean()
         self.std = self.df.std(ddof=0)["temperatureAvg"]
+        self.df = self.df.loc[self.df['temperatureAvg'] > 1]
         self.df = self.df.loc[(self.avg - sigma * self.std < self.df['temperatureAvg']) \
-                              & (self.df['temperatureAvg'] < self.avg + sigma * self.std) & self.df['temperatureAvg'] != 0]
+                              & (self.df['temperatureAvg'] < self.avg + sigma * self.std) ]
         self.avg = self.df["temperatureAvg"].mean()
         self.std = self.df.std(ddof=0)["temperatureAvg"]
 
