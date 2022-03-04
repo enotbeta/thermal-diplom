@@ -12,7 +12,7 @@ class Event:
     def filter(self, sigma=2):
         self.avg = self.df["temperatureAvg"].mean()
         self.std = self.df.std(ddof=0)["temperatureAvg"]
-        self.df = self.df.loc[self.df['temperatureAvg'] > 1]
+        self.df = self.df.loc[self.df['temperatureAvg'] > 1000]
         self.df = self.df.loc[(self.avg - sigma * self.std < self.df['temperatureAvg']) \
                               & (self.df['temperatureAvg'] < self.avg + sigma * self.std) ]
         self.avg = self.df["temperatureAvg"].mean()
@@ -92,3 +92,4 @@ class Import:
 
 #model.df_stat[['id','temperatureAvg']].plot(x = 'id', y = 'temperatureAvg', kind = 'scatter')
 #model.df_all[['id','temperatureAvg']].plot(x = 'id', y = 'temperatureAvg', kind = 'scatter')
+#%%
