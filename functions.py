@@ -90,6 +90,12 @@ class Import:
         df = pd.DataFrame({"id": id, "dist": dist, "t": t, "ts": ts, "x": x, "y": y, "w": w, "h": h, \
                            "strange_thing": strange_thing, "x_ir": x_ir, "y_ir": y_ir, "w_ir": w_ir, "h_ir": h_ir})
 
+def mean_list(dataframe):
+    x = []
+    for item in dataframe['id'].unique():
+        x += [dataframe.loc[dataframe['id'] == item]['temperatureAvg'].mean()]
+    return x
+
 #model.df_stat[['id','temperatureAvg']].plot(x = 'id', y = 'temperatureAvg', kind = 'scatter')
 #model.df_all[['id','temperatureAvg']].plot(x = 'id', y = 'temperatureAvg', kind = 'scatter')
 #%%
