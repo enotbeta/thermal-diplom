@@ -62,3 +62,11 @@ data1 = data1.loc[data1['id'] > 935]
 fig = plt.figure(figsize=(20,20))
 plot = fig.add_subplot(111, projection='3d')
 plot.scatter(data1['ts'], data1['distance'], data1['temperatureAvg'], c = data1['temperatureAvg'], s=40, alpha = 0.01, cmap ='magma')
+
+#%%
+#ts clustering
+data = np.array(data1['ts'])
+data = data.reshape(-1,1)
+kmeans = KMeans(n_clusters=7)
+kmeans.fit(data)
+z = kmeans.predict(data)
