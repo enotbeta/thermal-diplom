@@ -56,3 +56,9 @@ data1 = data1.loc[data1['temperatureAvg'] > 2000]
 #data1 = data1.loc[data1['mappingError'] < 0.01]
 #data1 = data1.loc[data1['temperatureSdv'] < 500]
 data1 = data1.loc[data1['id'] > 935]
+
+#%%
+#График 3д
+fig = plt.figure(figsize=(20,20))
+plot = fig.add_subplot(111, projection='3d')
+plot.scatter(data1['ts'], data1['distance'], data1['temperatureAvg'], c = data1['temperatureAvg'], s=40, alpha = 0.01, cmap ='magma')
