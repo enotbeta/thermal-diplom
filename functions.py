@@ -96,7 +96,8 @@ def mean_list(dataframe):
     return x
 
 
-def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points = True, close_data_size_koef = 10, print_plot = True):
+def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points=True, close_data_size_koef=10,
+                  print_plot=True):
     for i in range(len(clusters)):
         a = clusters[i]
         b = clusters1[i]
@@ -105,13 +106,17 @@ def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points = 
 
         if len(main_mean_list1) > 30:
 
-            algo_set_avg = alg.create_trend(main_mean_list, close_data_size=len(main_mean_list) // close_data_size_koef, ratio=0)
-            mean_set_avg = alg.create_sdv_trend(main_mean_list, algo_set_avg, close_data_size=len(main_mean_list) // close_data_size_koef,
+            algo_set_avg = alg.create_trend(main_mean_list, close_data_size=len(main_mean_list) // close_data_size_koef,
+                                            ratio=0)
+            mean_set_avg = alg.create_sdv_trend(main_mean_list, algo_set_avg,
+                                                close_data_size=len(main_mean_list) // close_data_size_koef,
                                                 ratio=0)
             border = algo_set_avg + mean_set_avg
 
-            algo_set_avg1 = alg.create_trend(main_mean_list1, close_data_size=len(main_mean_list1) // close_data_size_koef, ratio=0)
-            mean_set_avg1 = alg.create_sdv_trend(main_mean_list1, algo_set_avg1, close_data_size=len(main_mean_list1) // close_data_size_koef,
+            algo_set_avg1 = alg.create_trend(main_mean_list1,
+                                             close_data_size=len(main_mean_list1) // close_data_size_koef, ratio=0)
+            mean_set_avg1 = alg.create_sdv_trend(main_mean_list1, algo_set_avg1,
+                                                 close_data_size=len(main_mean_list1) // close_data_size_koef,
                                                  ratio=0)
             border1 = algo_set_avg1 + mean_set_avg1
 
@@ -132,7 +137,22 @@ def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points = 
                     plot.plot(b['id'].unique(), algo_set_avg1, color='blue', linewidth=6)
                     plot.plot(b['id'].unique(), border1, color='pink', linewidth=6)
 
-            plot.set_xlabel('ID', fontsize = 18)
-            plot.set_ylabel('Mean temperature AVG', fontsize = 18)
-            plot.set_title("Id {}".format(i), fontsize = 18)
-# %%
+            plot.set_xlabel('ID', fontsize=18)
+            plot.set_ylabel('Mean temperature AVG', fontsize=18)
+            plot.set_title("Id {}".format(i), fontsize=18)
+
+
+def create_data(data, size):
+    print("new")
+    x = []
+    y = []
+    data = data.reset_index(drop=True)
+    for i in range(size, len(data) - 1):
+        var_list = []
+        for j in range(size):
+            var_list.append(data.at[i - j, 'temperatureAvg'])
+        x.append(var_list)
+        y.append(data.at[i, 'markup'])
+    x = np.array(x)
+    y = np.array(y)
+    return x, y

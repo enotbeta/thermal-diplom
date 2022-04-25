@@ -58,3 +58,4 @@ def clusterise(dataframe, number_of_clusters):
     for name in dataframe['cluster'].unique():
         clusters.append(dataframe.loc[dataframe['cluster'] == name])
     return clusters
+
