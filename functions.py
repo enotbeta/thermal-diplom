@@ -90,10 +90,14 @@ class Import:
 
 
 def mean_list(dataframe):
-    x = []
+    temp = []
+    id = []
+    sdv = []
     for item in dataframe['id'].unique():
-        x += [dataframe.loc[dataframe['id'] == item]['temperatureAvg'].mean()]
-    return x
+        temp += [dataframe.loc[dataframe['id'] == item]['temperatureAvg'].mean()]
+        id += [item]
+        sdv += [dataframe.loc[dataframe['id'] == item]['temperatureSdv'].mean()]
+    return pd.DataFrame({'id': id, 'temperatureAvg' : temp, 'tempreratureSdv' : sdv})
 
 
 def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points=True, close_data_size_koef=10,
@@ -106,15 +110,14 @@ def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points=Tr
 
         if len(main_mean_list1) > 30:
 
-            algo_set_avg = alg.create_trend(main_mean_list, close_data_size=len(main_mean_list) // close_data_size_koef,
-                                            ratio=0)
+            algo_set_avg = alg.create_trend(main_mean_list, close_data_size=len(main_mean_list) // close_data_size_koef)
             mean_set_avg = alg.create_sdv_trend(main_mean_list, algo_set_avg,
                                                 close_data_size=len(main_mean_list) // close_data_size_koef,
                                                 ratio=0)
             border = algo_set_avg + mean_set_avg
 
             algo_set_avg1 = alg.create_trend(main_mean_list1,
-                                             close_data_size=len(main_mean_list1) // close_data_size_koef, ratio=0)
+                                             close_data_size=len(main_mean_list1) // close_data_size_koef)
             mean_set_avg1 = alg.create_sdv_trend(main_mean_list1, algo_set_avg1,
                                                  close_data_size=len(main_mean_list1) // close_data_size_koef,
                                                  ratio=0)
@@ -143,7 +146,6 @@ def draw_clusters(clusters, clusters1, main=True, filtered=True, print_points=Tr
 
 
 def create_data(data, size):
-    print("new")
     x = []
     y = []
     data = data.reset_index(drop=True)
